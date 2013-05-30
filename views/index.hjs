@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <meta name="viewport" content="width=2560px">
+        <link rel='stylesheet' href='/css/style.css' />
+    </head>
+    <body>
+        <div id="incartouch">
+            <h1>La Cabine</h1>
+        </div>
+        <div id="vcontainer">
+            <div class="imgrow">
+                {{#img_row1}}
+                <div class="vlauncher">
+                    <img src="/cover/{{.}}"/>
+                </div>
+                {{/img_row1}}
+            </div>
+            <div class="imgrow">
+                {{#img_row2}}
+                <div class="vlauncher">
+                    <img src="/cover/{{.}}"/>
+                </div>
+                {{/img_row2}}
+            </div>
+        </div>
+        <div class="centered">
+            <p class="maintxt">Vous pouvez maintenant entrer dans la cabine</p>
+            <p class="subtxt">N'oubliez pas de laisser un mot en sortant</p>
+        </div>
+        <script data-main="js/main" src="js/lib/require-jquery.js"></script>
+    </body>
+</html>

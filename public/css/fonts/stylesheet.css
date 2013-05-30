@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'ua_squaredregular';
+    src: url('uasquare-webfont.eot');
+    src: url('uasquare-webfont.eot?#iefix') format('embedded-opentype'),
+         url('uasquare-webfont.woff') format('woff'),
+         url('uasquare-webfont.ttf') format('truetype'),
+         url('uasquare-webfont.svg#ua_squaredregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
