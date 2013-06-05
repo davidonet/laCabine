@@ -12,7 +12,7 @@
 
 body {
     font-family: 'ua_squaredregular';
-    font-size: 0;
+    font-size: 1;
     background-color: @light_grey;
     margin: 0 0 0 0;
     padding: 0 0 0 0;
@@ -36,6 +36,7 @@ h1 {
     -webkit-transform: rotate(-90deg);
     -moz-transform-origin: 0 0;
     -moz-transform: rotate(-90deg);
+    z-index: 1000;
 }
 
 p {
@@ -43,20 +44,20 @@ p {
     font-size: 60pt;
 }
 
-.maintxt{
-    color:@green_bug;
+.maintxt {
+    color: @green_bug;
 }
 
-.subtxt{
-    color:@green_explosion;
+.subtxt {
+    color: @green_explosion;
+    margin-bottom: 1ex;
 }
-
 
 hr {
     border: solid 1px @light_grey;
 }
 
-img {
+.vlauncher > img {
     border-width: 0;
     margin: 0;
 }
@@ -70,6 +71,28 @@ img {
     display: inline;
     margin-left: 25px;
     margin-right: 25px;
+    margin-bottom: 50px;
+    float: left; /* important */
+    position: relative;
+}
+
+div.description {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 20%; /* position will be on bottom */
+    left: 0;
+    width: 100%;
+    /* styling bellow */
+    background-color: black;
+    opacity: 0.7; /* transparency */
+}
+p.description_content {
+    padding: 10px;
+    margin-top: 8px;
+    text-align: center;
+    font-family: 'LaBelleAurore';
+    font-size: 70px;
+    color: #E0E4CC;
+    opacity: 1;
 }
 
 .centered {
@@ -84,3 +107,15 @@ img {
     margin: auto;
     display: none;
 }
+
+#drawaword {
+    
+    position: absolute;
+    top: 720px;
+    left: 430px;
+    display:block;
+}
+
+
+
+@import 'literally.css';
