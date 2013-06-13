@@ -36,22 +36,15 @@
                 {{/img_row2}}
             </div>
         </div>
-        <div class="centered">
-            <p class="maintxt">
-                Vous pouvez maintenant entrer dans la cabine
+        <div id="centered">
+            <p id="counter">
+                10
             </p>
-            <p class="subtxt">
-                N'oubliez pas de laisser un mot en sortant
-            </p>
+            <p id="maintxt"/>
+            <p id="subtxt"/>
         </div>
 
         <div id="drawaword">
-            <p class="maintxt">
-                Vous venez de voir une vidéo
-            </p>
-            <p class="subtxt">
-                Avec le stylo ecrivez dans l'espace blanc ci-dessous
-            </p>
             <div class="literally">
                 <canvas></canvas>
             </div>
