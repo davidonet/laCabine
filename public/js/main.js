@@ -69,6 +69,7 @@ require(['jquery', 'underscore'], function($, _) {
 											counter = 18;
 											$('#counter').text(counter);
 											$("#centered").fadeIn(500);
+											myLC.clear();
 											$("#drawaword").fadeIn(500);
 											var myInt3 = setInterval(function() {
 												$('#counter').text(counter--);
