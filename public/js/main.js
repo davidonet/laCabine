@@ -81,7 +81,7 @@ require(['jquery', 'underscore'], function($, _) {
 															top : 250
 														});
 														$('#counter').css({
-															color : "#E0E4CC"
+															color : "#FABE28"
 														});
 														$('#counter').text("Merci");
 														$('#maintxt').html("Vous venez de contribuer au projet transmedia<br/>La Cabine");
