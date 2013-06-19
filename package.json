@@ -11,6 +11,8 @@
 		"less-middleware": "*",
 		"socket.io": "*",
 		"mediainfo": "*",
-		"async":"*"
+		"async": "*",
+		"base64": "*",
+		"moment": "*"
 	}
 }

@@ -42,7 +42,7 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 				});
 				$("#centered").fadeIn(100, function() {
 					// Wait before go inside the box
-					var counter = 1;
+					var counter = 4;
 					var myInt1 = setInterval(function() {
 						$('#counter').text(counter--);
 						if (counter < 0) {
@@ -54,7 +54,7 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 								$('#maintxt').text("La Cabine est en cours d'utilisation");
 								$('#subtxt').text("Patientez jusqu'à la fin du compte à rebours");
 								// Wait 3 minutes for the video
-								counter = 1;
+								counter = 180;
 								$('#counter').text(counter);
 								$("#centered").delay(1000).fadeIn(500);
 								socket.on('play', function(data) {
@@ -76,20 +76,34 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 											$('#maintxt').text("Vous venez de voir une vidéo");
 											$('#subtxt').text("Avec le stylo, laissez 3 mots");
 											// Wait for writing
-											counter = 30;
+											counter = 60;
 											$('#counter').text(counter);
 											$("#centered").fadeIn(500);
 											myLC.clear();
 											$("#drawaword").fadeIn(500);
 											var myInt3 = setInterval(function() {
 												$('#counter').text(counter--);
-												if (counter == 20) {
+												if (counter == 50) {
 													$('#submit').fadeIn(2000);
 												}
 												$('#submit').click(function() {
 													counter = 0;
 												});
 												if (counter < 0) {
+													var canvas = document.getElementById('tagit');
+													var dataImg = canvas.toDataURL("image/png");
+													$.ajax({
+														type : "POST",
+														url : "/postImg",
+														data : {
+															data : dataImg,
+															video : filename,
+														},
+														success : function() {
+															console.log('image sent');
+														}
+													});
+
 													clearInterval(myInt3);
 													$('#submit').hide();
 													$("#drawaword").fadeOut(500);
@@ -109,7 +123,7 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 																$("#vcontainer").fadeIn();
 
 															});
-														}, 3000)
+														}, 5000)
 													});
 												}
 											}, 1000);

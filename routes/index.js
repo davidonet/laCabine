@@ -75,3 +75,17 @@ exports.play = function(req, res) {
 		success : true
 	});
 };
+
+var decode64 = require('base64').decode;
+var moment = require('moment')
+exports.postImg = function(req, res) {
+	var data = req.body.data.replace(/^data:image\/\w+;base64,/, "");
+	var buf = new Buffer(data, 'base64');
+	var path = mediadir + 'feedback/' + moment().format('YYYYMMDD') + '/';
+	fs.mkdir(path, function(err) {
+		fs.writeFile(path + moment().format('HHmmss') + '-' + req.body.video.slice(0, -4) + '.png', buf);
+	});
+	res.json({
+		success : true
+	});
+}

@@ -51,7 +51,7 @@
         </div>
         <div id="drawaword">
             <div class="literally">
-                <canvas></canvas>
+                <canvas id='tagit'></canvas>
             </div>
         </div>
 
