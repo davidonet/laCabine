@@ -2,7 +2,8 @@
  * GET home page.
  */
 
-fs = require('fs');
+var fs = require('fs');
+var async = require('async');
 
 function shuffleArray(array) {
 	for (var i = array.length - 1; i > 0; i--) {
@@ -14,24 +15,63 @@ function shuffleArray(array) {
 	return array;
 }
 
-var test_txt = ["mon chien, mon père", "amour touche 2", "style pompier", "russian style"]
+var mediadir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/';
 
+var mediainfo = require("mediainfo");
 exports.index = function(req, res) {
-	fs.readdir('public/cover', function(err, files) {
+	fs.readdir(mediadir, function(err, files) {
+		function isImage(element, index, array) {
+			return (element.slice(-3) == 'jpg');
+		};
+		files = files.filter(isImage);
 		shuffleArray(files);
 		var lFiles = files.slice(0, 6);
 
 		var lData = [];
-		for (var file in lFiles) {
-			lData.push({
-				f : lFiles[file],
-				t : test_txt[Math.floor(Math.random() * test_txt.length)]
+		async.each(lFiles, function(file, done) {
+			var moviename = file.slice(0, -3) + "mov";
+			mediainfo(mediadir + moviename, function(err, res) {
+				if (err) {
+					return console.log(err);
+				}
+				lData.push({
+					f : file,
+					t : res[0].sonm,
+					i : moviename
+				});
+				done();
 			});
-		}
-		res.render('index', {
-			title : 'Express',
-			img_row1 : lData.slice(0, 3),
-			img_row2 : lData.slice(3, 6)
+
+		}, function(err) {
+			res.render('index', {
+				title : 'Express',
+				img_row1 : lData.slice(0, 3),
+				img_row2 : lData.slice(3, 6)
+			});
 		});
+	});
+};
+
+var childProcess = require('child_process');
+
+exports.cover = function(req, res) {
+	res.sendfile(mediadir + req.params.file);
+};
+
+exports.play = function(req, res) {
+	console.log("playing", req.params.file);
+	var playProc = childProcess.exec('mplayer ' + mediadir + req.params.file + ' -fs', function(error, stdout, stderr) {
+		if (error) {
+			console.log(error.stack);
+			console.log('Error code: ' + error.code);
+			console.log('Signal received: ' + error.signal);
+		}
+	});
+	playProc.on('exit', function(code) {
+		console.log("play finished")
+		io.sockets.emit('play', "finished");
+	});
+	res.json({
+		success : true
 	});
 };

@@ -2,7 +2,8 @@ requirejs.config({
 	paths : {
 		underscore : 'lib/underscore',
 		bootstrap : 'lib/bootstrap',
-		literallycanvas : 'lib/literallycanvas'
+		literallycanvas : 'lib/literallycanvas',
+		socket : '/socket.io/socket.io'
 	},
 	shim : {
 		'underscore' : {
@@ -13,7 +14,7 @@ requirejs.config({
 
 var myLC;
 
-require(['jquery', 'underscore'], function($, _) {
+require(['jquery', 'underscore', 'socket'], function($, _) {
 	$(function() {
 		$(document).one('click', function() {
 			if (document.documentElement.mozRequestFullScreen)
@@ -25,7 +26,10 @@ require(['jquery', 'underscore'], function($, _) {
 				return e.preventDefault();
 			}
 		});
+		var socket = io.connect();
+
 		$('.vlauncher').click(function() {
+			var filename = $(this).attr("name");
 			$('#counter').text("5");
 			$('#maintxt').text("Vous pouvez maintenant entrer dans la cabine");
 			$('#subtxt').text("N'oubliez pas de laisser trois mots ici en sortant");
@@ -42,15 +46,21 @@ require(['jquery', 'underscore'], function($, _) {
 					var myInt1 = setInterval(function() {
 						$('#counter').text(counter--);
 						if (counter < 0) {
+							$.get('/play/' + filename, function(data) {
+							});
+
 							clearInterval(myInt1);
 							$("#centered").fadeOut(500, function() {
 								$('#maintxt').text("La Cabine est en cours d'utilisation");
 								$('#subtxt').text("Patientez jusqu'à la fin du compte à rebours");
 								// Wait 3 minutes for the video
-								counter = 9;
+								counter = 180;
 								$('#counter').text(counter);
 								$("#centered").delay(1000).fadeIn(500);
-
+								socket.on('play', function(data) {
+									if (data == "finished")
+										counter = 0;
+								});
 								var myInt2 = setInterval(function() {
 									$('#counter').text(counter--);
 									if (counter < 0) {
@@ -90,7 +100,7 @@ require(['jquery', 'underscore'], function($, _) {
 														setTimeout(function() {
 															$("#centered").fadeOut(500, function() {
 																$("#vcontainer").fadeIn();
-																
+
 															});
 														}, 3000)
 													});

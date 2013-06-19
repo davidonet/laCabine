@@ -13,7 +13,7 @@
         <div id="vcontainer">
             <div class="imgrow">
                 {{#img_row1}}
-                <div class="vlauncher">
+                <div class="vlauncher" name="{{i}}">
                     <img src="/cover/{{f}}"/>
                     <div class="description">
                         <p class="description_content">
@@ -26,7 +26,7 @@
             <div id='firstaid'>Touchez une vignette pour choisir votre téléphoneur</div>
             <div class="imgrow">
                 {{#img_row2}}
-                <div class="vlauncher">
+                <div class="vlauncher" name="{{i}}">
                     <img src="/cover/{{f}}"/>
                     <div class="description">
                         <p class="description_content">
