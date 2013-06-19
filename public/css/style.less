@@ -39,8 +39,8 @@ h1 {
     z-index: 1000;
 }
 
-#incartouch img{
-    height:250px;
+#incartouch img {
+    height: 250px;
 }
 
 p {
@@ -138,19 +138,19 @@ p.description_content {
     -moz-animation-duration: 3s;
     -moz-animation-iteration-count: infinite;
     -moz-animation-name: blink;
-    -moz-animation-timing-function: ease-in-out;  
+    -moz-animation-timing-function: ease-in-out;
 }
 
 @-moz-keyframes blink {
-    0% {
-        opacity:1;
-    }
-    50% {
-        opacity:.1;
-    }
-    100% {
-        opacity:1;
-    }
+0% {
+opacity:1;
+}
+50% {
+opacity:.1;
+}
+100% {
+opacity:1;
+}
 }
 
 #drawaword {
@@ -160,9 +160,33 @@ p.description_content {
     display: block;
 }
 
-
 #counter {
     font-size: 500pt;
 }
+
+#submit {
+    width: 500px;
+    height: 100px;
+    text-align: center;
+    position: absolute;
+    top: 300px;
+    bottom: 0;
+    left: 340px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    display: block;
+    float: none;
+    z-index: 100;
+    font-size: 90px;
+    color: @dark_grey;
+    border: solid 6px @ivory;
+    border-radius: 50px;
+    padding: 10px 10px 10px 10px;
+    opacity: .5;
+    background-color: @ivory;
+    display: none;
+};
 
 @import 'literally.css';

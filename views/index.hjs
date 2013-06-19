@@ -8,7 +8,7 @@
     <body>
 
         <div id="incartouch">
-           <img src="/img/logoCabine.png"/>
+            <img src="/img/logoCabine.png"/>
         </div>
         <div id="vcontainer">
             <div class="imgrow">
@@ -23,7 +23,9 @@
                 </div>
                 {{/img_row1}}
             </div>
-            <div id='firstaid'>Touchez une vignette pour choisir votre téléphoneur</div>
+            <div id='firstaid'>
+                Touchez une vignette pour choisir votre téléphoneur
+            </div>
             <div class="imgrow">
                 {{#img_row2}}
                 <div class="vlauncher" name="{{i}}">
@@ -44,7 +46,9 @@
             <p id="maintxt"/>
             <p id="subtxt"/>
         </div>
-
+        <div id="submit">
+            Déposer
+        </div>
         <div id="drawaword">
             <div class="literally">
                 <canvas></canvas>

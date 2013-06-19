@@ -12,7 +12,7 @@ requirejs.config({
 	}
 });
 
-var myLC;
+var myLC, pass;
 
 require(['jquery', 'underscore', 'socket'], function($, _) {
 	$(function() {
@@ -42,7 +42,7 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 				});
 				$("#centered").fadeIn(100, function() {
 					// Wait before go inside the box
-					var counter = 5;
+					var counter = 1;
 					var myInt1 = setInterval(function() {
 						$('#counter').text(counter--);
 						if (counter < 0) {
@@ -54,7 +54,7 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 								$('#maintxt').text("La Cabine est en cours d'utilisation");
 								$('#subtxt').text("Patientez jusqu'à la fin du compte à rebours");
 								// Wait 3 minutes for the video
-								counter = 180;
+								counter = 1;
 								$('#counter').text(counter);
 								$("#centered").delay(1000).fadeIn(500);
 								socket.on('play', function(data) {
@@ -76,15 +76,22 @@ require(['jquery', 'underscore', 'socket'], function($, _) {
 											$('#maintxt').text("Vous venez de voir une vidéo");
 											$('#subtxt').text("Avec le stylo, laissez 3 mots");
 											// Wait for writing
-											counter = 18;
+											counter = 30;
 											$('#counter').text(counter);
 											$("#centered").fadeIn(500);
 											myLC.clear();
 											$("#drawaword").fadeIn(500);
 											var myInt3 = setInterval(function() {
 												$('#counter').text(counter--);
+												if (counter == 20) {
+													$('#submit').fadeIn(2000);
+												}
+												$('#submit').click(function() {
+													counter = 0;
+												});
 												if (counter < 0) {
 													clearInterval(myInt3);
+													$('#submit').hide();
 													$("#drawaword").fadeOut(500);
 													$("#centered").fadeOut(500, function() {
 														$("#centered").css({
