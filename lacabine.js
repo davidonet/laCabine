@@ -25,7 +25,7 @@ app.configure('development', function() {
 	app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+app.get('/selection', routes.selection);
 app.get('/play/:file', routes.play);
 app.get('/cover/:file', routes.cover);
 app.post('/postImg', routes.postImg);

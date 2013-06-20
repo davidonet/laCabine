@@ -18,7 +18,7 @@ function shuffleArray(array) {
 var mediadir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/';
 
 var mediainfo = require("mediainfo");
-exports.index = function(req, res) {
+exports.selection = function(req, res) {
 	fs.readdir(mediadir, function(err, files) {
 		function isImage(element, index, array) {
 			return (element.slice(-3) == 'jpg');
@@ -31,26 +31,26 @@ exports.index = function(req, res) {
 		async.each(lFiles, function(file, done) {
 			var moviename = file.slice(0, -3) + "mov";
 			mediainfo(mediadir + moviename, function(err, res) {
+				
 				if (err) {
 					return console.log(err);
 				}
 				lData.push({
 					f : file,
-					t : res[0].sonm,
+					t : res[0].movie_name,
 					i : moviename
 				});
 				done();
 			});
 
 		}, function(err) {
-			res.render('index', {
-				title : 'Express',
+			res.json({
 				img_row1 : lData.slice(0, 3),
 				img_row2 : lData.slice(3, 6)
 			});
 		});
 	});
-};
+}
 
 var childProcess = require('child_process');
 
