@@ -1279,7 +1279,7 @@
 	LC.StrokeTool = function(_super) {
 		__extends(StrokeTool, _super);
 		function StrokeTool() {
-			this.strokeWidth = 5;
+			this.strokeWidth = 12;
 		}
 
 		return StrokeTool;

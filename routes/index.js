@@ -60,7 +60,7 @@ exports.cover = function(req, res) {
 
 exports.play = function(req, res) {
 	console.log("playing", req.params.file);
-	var playProc = childProcess.exec('mplayer ' + mediadir + req.params.file + ' -fs', function(error, stdout, stderr) {
+	var playProc = childProcess.exec('mplayer -really-quiet '+ mediadir + req.params.file+' -fs', function(error, stdout, stderr) {
 		if (error) {
 			console.log(error.stack);
 			console.log('Error code: ' + error.code);
