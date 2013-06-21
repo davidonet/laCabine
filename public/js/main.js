@@ -28,7 +28,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 			}
 		});
 
-		var socket = io.connect();
+		var socket;
 
 		function reload() {
 			$.get('/selection', function(data) {
@@ -129,6 +129,7 @@ reload();
 			};
 
 			function play() {
+				socket = io.connect();
 				$.get('/play/' + filename, function(data) {
 				});
 
@@ -147,7 +148,8 @@ reload();
 					myInt2 = setInterval(function() {
 						$('#counter').text(counter--);
 						if (counter < 0) {
-							draw();
+						socket.socket.reconnect();
+						draw();
 						}
 					}, 1000);
 				});

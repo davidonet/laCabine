@@ -35,5 +35,5 @@ var server = http.createServer(app).listen(app.get('port'), function() {
 });
 
 global.io = socket.listen(server, {
-	log : false
+	log : true
 });
