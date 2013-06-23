@@ -31,6 +31,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 		var socket;
 
 		function reload() {
+			$('#reload').show();
 			$.get('/selection', function(data) {
 				$('.vlauncher').remove();
 				_.each(data.img_row1, function(elt, idx) {
@@ -51,7 +52,10 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 				});
 			});
 		};
-reload();
+
+		$('#reload').click(reload);
+
+		reload();
 
 		function playseq(filename) {
 
@@ -90,7 +94,7 @@ reload();
 
 					setTimeout(function() {
 						reload();
-					}, 5000);
+					}, 3000);
 				})
 			}
 
@@ -148,14 +152,15 @@ reload();
 					myInt2 = setInterval(function() {
 						$('#counter').text(counter--);
 						if (counter < 0) {
-						socket.socket.reconnect();
-						draw();
+							socket.socket.reconnect();
+							draw();
 						}
 					}, 1000);
 				});
 			}
 
 			function intro() {
+				$('#reload').hide();
 				$('#counter').text("5");
 				$('#maintxt').text("Vous pouvez maintenant entrer dans la cabine");
 				$('#subtxt').text("N'oubliez pas de laisser trois mots ici en sortant");
