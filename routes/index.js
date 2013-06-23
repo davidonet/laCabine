@@ -19,6 +19,16 @@ var mediadir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/';
 
 var mediainfo = require("mediainfo");
 exports.selection = function(req, res) {
+	var killProc = childProcess.exec('killall mplayer', function(error, stdout, stderr) {
+                if (error) {
+                        console.log(error.stack);
+                        console.log('Error code: ' + error.code);
+                        console.log('Signal received: ' + error.signal);
+                }
+        });
+       	killProc.on('exit', function(code) {
+                console.log("players killed")         
+	        });
 	fs.readdir(mediadir, function(err, files) {
 		function isImage(element, index, array) {
 			return (element.slice(-3) == 'jpg');
