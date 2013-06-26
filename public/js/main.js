@@ -94,7 +94,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 
 					setTimeout(function() {
 						reload();
-					}, 3000);
+					}, 1000);
 				})
 			}
 
@@ -164,7 +164,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 				$('#counter').text("5");
 				$('#maintxt').text("Vous pouvez maintenant entrer dans la cabine");
 				$('#subtxt').text("N'oubliez pas de laisser trois mots ici en sortant");
-				$("#vcontainer").fadeOut(1000, function() {
+				$("#vcontainer").fadeOut(300, function() {
 					$('#counter').css({
 						color : "#E0E4CC"
 					});
