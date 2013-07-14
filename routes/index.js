@@ -34,6 +34,7 @@ exports.selection = function(req, res) {
 			return (element.slice(-3) == 'jpg');
 		};
 		files = files.filter(isImage);
+		console.log(files.length)
 		shuffleArray(files);
 		var lFiles = files.slice(0, 6);
 
@@ -55,6 +56,7 @@ exports.selection = function(req, res) {
 
 		}, function(err) {
 			res.json({
+				nbvid : files.length,
 				img_row1 : lData.slice(0, 3),
 				img_row2 : lData.slice(3, 6)
 			});

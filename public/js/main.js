@@ -33,6 +33,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 		function reload() {
 			$('#reload').show();
 			$.get('/selection', function(data) {
+				$('#nbvid').html('A ce jour,<br/>' + data.nbvid + ' videos');
 				$('.vlauncher').remove();
 				_.each(data.img_row1, function(elt, idx) {
 					var templ = '<div class="vlauncher" name="{{i}}"><img src="/cover/{{f}}"/><div class="description"><p class="description_content">{{t}}</p></div></div>';
@@ -109,8 +110,8 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 					$('#counter').css({
 						color : "#333333"
 					});
-					$('#maintxt').text("Vous venez de voir une vidéo");
-					$('#subtxt').text("Avec le stylo, laissez 3 mots");
+					$('#maintxt').text("Annotez la vidéo en 3 mots");
+					$('#subtxt').text("Les mots créent des liens");
 					// Wait for writing
 					counter = 60;
 					$('#counter').text(counter);
