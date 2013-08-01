@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-basedir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/feedback.s/'
+basedir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/feedback_sorted'
 
 import os
 import shutil
