@@ -9,7 +9,7 @@ for (dirpath, dirnames, filenames) in os.walk('/home/dolivari/Dropbox/Partages/p
     date = dirpath.split('/')[-1]
     for f in filenames:
         hour = f.split('-')[0]
-        video = f.split('-')[1].split('.')[0]
+        video = f[7:].split('.')[0]
         file =  dirpath+'/'+f
         dir = basedir+video
         if(not os.path.exists(dir)):
