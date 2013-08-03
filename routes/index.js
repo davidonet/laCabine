@@ -4,6 +4,7 @@
 
 var fs = require('fs');
 var async = require('async');
+var request = require('request');
 
 function shuffleArray(array) {
 	for (var i = array.length - 1; i > 0; i--) {
@@ -20,15 +21,15 @@ var mediadir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/';
 var mediainfo = require("mediainfo");
 exports.selection = function(req, res) {
 	var killProc = childProcess.exec('killall mplayer', function(error, stdout, stderr) {
-                if (error) {
-                        console.log(error.stack);
-                        console.log('Error code: ' + error.code);
-                        console.log('Signal received: ' + error.signal);
-                }
-        });
-       	killProc.on('exit', function(code) {
-                console.log("players killed")         
-	        });
+		if (error) {
+			console.log(error.stack);
+			console.log('Error code: ' + error.code);
+			console.log('Signal received: ' + error.signal);
+		}
+	});
+	killProc.on('exit', function(code) {
+		console.log("players killed")
+	});
 	fs.readdir(mediadir, function(err, files) {
 		function isImage(element, index, array) {
 			return (element.slice(-3) == 'jpg');
@@ -42,7 +43,7 @@ exports.selection = function(req, res) {
 		async.each(lFiles, function(file, done) {
 			var moviename = file.slice(0, -3) + "mov";
 			mediainfo(mediadir + moviename, function(err, res) {
-				
+
 				if (err) {
 					return console.log(err);
 				}
@@ -63,7 +64,6 @@ exports.selection = function(req, res) {
 		});
 	});
 }
-
 var childProcess = require('child_process');
 
 exports.cover = function(req, res) {
@@ -72,7 +72,18 @@ exports.cover = function(req, res) {
 
 exports.play = function(req, res) {
 	console.log("playing", req.params.file);
-	var playProc = childProcess.exec('mplayer -really-quiet '+ mediadir + req.params.file+' -fs', function(error, stdout, stderr) {
+	var aLog = [{
+		type : 'laCabine',
+		time : new Date(),
+		data : {
+			name : req.params.file
+		}
+	}];
+	request.post("http://178.32.64.76/1.0/event/put", {
+		proxy : process.env.HTTP_PROXY,
+		body : JSON.stringify(aLog)
+	});
+	var playProc = childProcess.exec('mplayer -really-quiet ' + mediadir + req.params.file + ' -fs', function(error, stdout, stderr) {
 		if (error) {
 			console.log(error.stack);
 			console.log('Error code: ' + error.code);
