@@ -79,7 +79,7 @@ exports.play = function(req, res) {
 			name : req.params.file
 		}
 	}];
-	request.post("http://178.32.64.76/1.0/event/put", {
+	request.post("http://log.bype.org/1.0/event/put", {
 		proxy : process.env.HTTP_PROXY,
 		body : JSON.stringify(aLog)
 	});
