@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>HTML</title>
+		<script src="//js.leapmotion.com/0.4.0/leap.js"></script>
+		<script src="//js.leapmotion.com/leap-plugins-0.1.3.js"></script>
+	</head>
+
+	<body>
+		<script>
+			var controller = new Leap.Controller({
+				enableGestures : true
+			});
+
+			controller.on('gesture', function(gesture) {
+				if (gesture.type === 'swipe') {
+					handleSwipe(gesture);
+				}
+				if (gesture.type === 'circle') {
+					handleCircle(gesture);
+				}
+			});
+
+			function handleSwipe(swipe) {
+				var startFrameID;
+				if (swipe.state === 'stop') {
+					if (swipe.direction[0] > 0) {
+						//this means that the swipe is to the right direction
+						console.log("moveRight");
+					} else {
+						//this means that the swipe is to the left direction
+						console.log("moveLeft");
+					}
+				}
+			}
+
+			function handleCircle(swipe) {
+				if (swipe.state === 'stop') {
+					console.log("circle");
+				}
+			}
+
+
+			controller.connect();
+
+		</script>
+	</body>
+</html>
