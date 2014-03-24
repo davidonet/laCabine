@@ -46,7 +46,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 					$('#row2').append(vhtml);
 				});
 				$('.vlauncher').click(function() {
-					playseq($(this).attr("name"))
+					playseq($(this).attr("name"));
 				});
 				$("#centered").fadeOut(500, function() {
 					$("#vcontainer").fadeIn();
@@ -96,7 +96,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 					setTimeout(function() {
 						reload();
 					}, 1000);
-				})
+				});
 			}
 
 			function draw() {
@@ -129,7 +129,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 						if (counter < 0) {
 							outro();
 						}
-					}, 1000)
+					}, 1000);
 				});
 			};
 
@@ -183,7 +183,7 @@ require(['jquery', 'underscore', 'mustache', 'socket'], function($, _, Mustache)
 						}, 1000);
 					});
 
-				})
+				});
 			};
 
 			intro();
