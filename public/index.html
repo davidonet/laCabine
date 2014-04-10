@@ -1,42 +1,19 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>LaCabine</title>
-        <meta name="viewport" content="width=2560, initial-scale=.5, maximum-scale=.5, user-scalable=no">
-        <link rel='stylesheet' href='/css/style.css' />
-    </head>
-    <body>
-
-        <div id="incartouch">
-            <img src="/img/logoCabine.png"/>
-        </div>
-        <img id="reload" style="z-index:200; top:10px; left:35px; position:absolute; display: block;" src="/img/reload.png"/>
-        <div id="nbvid"></div>
-        <div id="vcontainer">
-            <div class="imgrow" id='row1'>
-
-            </div>
-            <div id='firstaid'>
-                Touchez une vignette pour choisir votre téléphoneur
-            </div>
-            <div class="imgrow" id='row2'></div>
-        </div>
-        <div id="centered">
-            <p id="counter">
-                10
-            </p>
-            <p id="maintxt"/>
-            <p id="subtxt"/>
-        </div>
-        <div id="submit">
-            OK
-        </div>
-        <div id="drawaword">
-            <div class="literally">
-                <canvas id='tagit'></canvas>
-            </div>
-        </div>
-
-        <script data-main="js/main" src="js/lib/require-jquery.js"></script>
-    </body>
+	<head>
+		<title>LaCabine</title>
+		<link rel='stylesheet' href='/css/style.css' />
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div style="height:150px"></div> 
+			<div id="myCarousel" class="carousel slide container" data-ride="carousel">
+				<ol class="carousel-indicators"></ol>
+				<div id="main" class="carousel-inner"></div>
+			</div>
+		</div>
+		<script src="js/lib/leap.js"></script>
+		<script src="js/lib/leap-plugins-0.1.3.js"></script>
+		<script data-main="js/main" src="js/lib/require-jquery.js"></script>
+	</body>
 </html>

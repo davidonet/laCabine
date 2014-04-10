@@ -28,6 +28,7 @@ app.configure('development', function() {
 app.get('/selection', routes.selection);
 app.get('/play/:file', routes.play);
 app.get('/cover/:file', routes.cover);
+app.get('/video/:file', routes.video);
 app.post('/postImg', routes.postImg);
 
 var server = http.createServer(app).listen(app.get('port'), function() {
@@ -37,3 +38,4 @@ var server = http.createServer(app).listen(app.get('port'), function() {
 global.io = socket.listen(server, {
 	log : false
 });
+

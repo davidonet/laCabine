@@ -35,9 +35,8 @@ exports.selection = function(req, res) {
 			return (element.slice(-3) == 'jpg');
 		};
 		files = files.filter(isImage);
-		console.log(files.length)
 		shuffleArray(files);
-		var lFiles = files.slice(0, 6);
+		var lFiles = files.slice(0, 16);
 
 		var lData = [];
 		async.each(lFiles, function(file, done) {
@@ -59,16 +58,24 @@ exports.selection = function(req, res) {
 			res.json({
 				nbvid : files.length,
 				img_row1 : lData.slice(0, 3),
-				img_row2 : lData.slice(3, 6)
+				img_row2 : lData.slice(3, 6),
+				imgs : lData
 			});
 		});
 	});
-}
+};
+
 var childProcess = require('child_process');
 
 exports.cover = function(req, res) {
 	res.sendfile(mediadir + req.params.file);
 };
+
+exports.video = function(req, res) {
+	res.sendfile(mediadir + req.params.file);
+};
+
+
 
 exports.play = function(req, res) {
 	console.log("playing", req.params.file);
@@ -111,4 +118,4 @@ exports.postImg = function(req, res) {
 	res.json({
 		success : true
 	});
-}
+};
