@@ -1,0 +1,51 @@
+@import "reset.css";
+@import 'fonts/stylesheet.css';
+
+body {
+	background-color: black;
+	overflow: hidden;
+	color: #ddd;
+	font-family: 'ua_squaredregular';
+}
+h1 {
+	font-size: 40px;
+	bottom: 5%;
+	position: absolute;
+	width: 100%;
+	font-weight: light;
+}
+#strenght {
+	color: yellow;
+}
+
+#back {
+	float: right;
+	font-size: 150px;
+}
+
+@-webkit-keyframes
+turning_cw {
+from {
+	-webkit-transform: rotate(0deg);
+}
+to {
+	-webkit-transform: rotate(360deg);
+}
+}
+
+#main {
+	margin-top: 5%;
+	margin-left: auto;
+	-webkit-animation: turning_cw 8s linear infinite;
+}
+
+.circle {
+	margin: auto;
+	text-align: center;
+	position: relative;
+	display: none;
+}
+
+.color0 {
+	background-color: #0aa00a;
+}
