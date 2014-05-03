@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes'), http = require('http'), path = require('path'), socket = require('socket.io');
+var express = require('express'), routes = require('./routes'), http = require('http'), path = require('path'), socket = require('socket.io'), lessMiddleware = require('less-middleware');
 
 var app = express();
 
@@ -15,9 +15,7 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(require('less-middleware')({
-		src : __dirname + '/public'
-	}));
+	app.use(lessMiddleware(path.join(__dirname, '/public')));
 	app.use(express.static(path.join(__dirname, 'public')));
 });
 
