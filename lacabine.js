@@ -27,6 +27,7 @@ app.get('/selection', routes.selection);
 app.get('/play/:file', routes.play);
 app.get('/cover/:file', routes.cover);
 app.get('/video/:file', routes.video);
+app.get('/feedback/:file/:level', routes.feedback);
 app.post('/postImg', routes.postImg);
 
 var server = http.createServer(app).listen(app.get('port'), function() {

@@ -4,6 +4,7 @@ requirejs.config({
 		bootstrap : 'lib/bootstrap',
 		socket : '/socket.io/socket.io',
 		mustache : 'lib/mustache',
+		jquery : 'lib/jquery-2.1.1.min',
 	},
 	shim : {
 		'underscore' : {
@@ -16,6 +17,8 @@ var myLC, pass;
 
 require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($, _, Mustache) {
 	$(function() {
+
+		var timeStamp = new Date().getTime();
 
 		var controller = new Leap.Controller({
 			enableGestures : true
@@ -30,19 +33,22 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 			}
 		});
 
-		function handleSwipe(swipe) {
-			var startFrameID;
-			if ((swipe.state === 'stop') && (100000 < swipe.duration)) {
-				if (swipe.direction[0] > 0) {
-				} else {
+		handleSwipe = _.debounce(function(swipe) {
+			if ((swipe.state === 'stop') && (150 < Math.abs(swipe.startPosition[0] - swipe.position[0]))) {
+				var now = new Date().getTime();
+				if (2000 < (now - timeStamp)) {
+					var videoName = window.location.hash.slice(1);
+					$.get('/feedback/' + videoName + '/' + st, function(data) {
+					});
 				}
 			}
-		}
+		}, 300);
 
 		var st = 0;
 		var radius = $(document).height() * .5;
 		var radiusmax = $(document).height() * .85;
 		var radiusmin = $(document).height() * .05;
+
 		function handleCircle(gest) {
 			if (gest.normal[2] <= 0) {
 				radius += gest.progress;
@@ -103,7 +109,7 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 		socket = io.connect();
 		controller.connect();
 
-		$('#circle01').css({
+		$('#circle01').animate({
 			top : '1%',
 			left : '-1%',
 			width : radius,

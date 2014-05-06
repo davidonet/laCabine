@@ -16,53 +16,51 @@ function shuffleArray(array) {
 	return array;
 }
 
-var mediadir = '/home/dolivari/Dropbox/Partages/partageLaCabine/VideoTel/';
-
+var mediadir = '/home/dolivari/Dropbox/Partages/partageLaCabine/mainum/';
 var mediainfo = require("mediainfo");
+var lData = [];
 exports.selection = function(req, res) {
 	var killProc = childProcess.exec('killall mplayer', function(error, stdout, stderr) {
 		if (error) {
-			console.log(error.stack);
-			console.log('Error code: ' + error.code);
-			console.log('Signal received: ' + error.signal);
 		}
 	});
 	killProc.on('exit', function(code) {
 		console.log("players killed")
 	});
-	fs.readdir(mediadir, function(err, files) {
-		function isImage(element, index, array) {
-			return (element.slice(-3) == 'jpg');
-		};
-		files = files.filter(isImage);
-		shuffleArray(files);
-		var lFiles = files.slice(0, 16);
+	if (0 < lData.length) {
+		res.json({
+			imgs : lData
+		});
+	} else {
+		fs.readdir(mediadir, function(err, files) {
+			function isImage(element, index, array) {
+				return (element.slice(-3) == 'jpg');
+			};
+			files = files.filter(isImage);
 
-		var lData = [];
-		async.each(lFiles, function(file, done) {
-			var moviename = file.slice(0, -3) + "mov";
-			mediainfo(mediadir + moviename, function(err, res) {
+			var lData = [];
+			async.each(files, function(file, done) {
+				var moviename = file.slice(0, -3) + "mov";
+				mediainfo(mediadir + moviename, function(err, res) {
 
-				if (err) {
-					return console.log(err);
-				}
-				lData.push({
-					f : file,
-					t : res[0].movie_name,
-					i : moviename
+					if (err) {
+						return console.log(err);
+					}
+					lData.push({
+						f : file,
+						t : res[0].movie_name,
+						i : moviename
+					});
+					done();
 				});
-				done();
-			});
 
-		}, function(err) {
-			res.json({
-				nbvid : files.length,
-				img_row1 : lData.slice(0, 3),
-				img_row2 : lData.slice(3, 6),
-				imgs : lData
+			}, function(err) {
+				res.json({
+					imgs : lData
+				});
 			});
 		});
-	});
+	}
 };
 
 var childProcess = require('child_process');
@@ -74,8 +72,6 @@ exports.cover = function(req, res) {
 exports.video = function(req, res) {
 	res.sendfile(mediadir + req.params.file);
 };
-
-
 
 exports.play = function(req, res) {
 	console.log("playing", req.params.file);
@@ -119,3 +115,11 @@ exports.postImg = function(req, res) {
 		success : true
 	});
 };
+
+exports.feedback = function(req, res) {
+	console.log(req.params.file, req.params.level);
+	res.json({
+		success : true
+	});
+};
+

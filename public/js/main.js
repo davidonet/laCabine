@@ -4,6 +4,8 @@ requirejs.config({
 		bootstrap : 'lib/bootstrap',
 		socket : '/socket.io/socket.io',
 		mustache : 'lib/mustache',
+		jquery : 'lib/jquery-2.1.1.min',
+		jssor : 'lib/jssor.slider.min'
 	},
 	shim : {
 		'underscore' : {
@@ -14,59 +16,65 @@ requirejs.config({
 
 var myLC, pass;
 
-require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($, _, Mustache) {
+require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], function($, _, Mustache) {
 	$(function() {
 		$.get('/selection', function(data) {
 			_.each(data.imgs, function(elt, idx) {
-				var templ = '<div class="item" name="{{i}}"><img src="/cover/{{f}}"/><div class="container"><div class="carousel-caption"><h1>{{t}}</h1></div></div></div>';
+				var templ = '<div><img  u="image" t="*" src="/cover/{{f}}"/><div u="caption" class="caption">{{t}}</div></div>';
 				var vhtml = Mustache.render(templ, elt);
 				$('#main').append(vhtml);
-				if (idx == 0) {
-					$('.item').first().addClass("active");
-				}
 			});
-			var theCarousel = $('#myCarousel').carousel({
-				interval : false
+			var jssor_slider1 = new $JssorSlider$('slider1_container', {
+				$AutoPlay : false
 			});
 
 			var controller = new Leap.Controller({
 				enableGestures : true
 			});
 
-			controller.on('gesture', function(gesture) {
-				if (gesture.type === 'swipe') {
-					handleSwipe(gesture);
-				}
-				if (gesture.type === 'circle') {
-					handleCircle(gesture);
+			var swiper = controller.gesture('swipe');
+			var circler = controller.gesture('circle');
+
+			var tolerance = 150;
+			var cooloff = 300;
+
+			var slider = _.debounce(function(xDir, yDir) {
+				if (xDir != 0)
+					if (0 < xDir) {
+						//this means that the swipe is to the right direction
+						jssor_slider1.$Prev();
+					} else {
+						//this means that the swipe is to the left direction
+						jssor_slider1.$Next();
+					}
+			}, cooloff);
+
+			swiper.update(function(g) {
+				if (Math.abs(g.translation()[0]) > tolerance || Math.abs(g.translation()[1]) > tolerance) {
+					var xDir = Math.abs(g.translation()[0]) > tolerance ? (g.translation()[0] > 0 ? -1 : 1) : 0;
+					slider(xDir, 0);
 				}
 			});
 
-			function handleSwipe(swipe) {
-				var startFrameID;
-				if ((swipe.state === 'stop') && (100000 < swipe.duration)) {
-					if (swipe.direction[0] > 0) {
-						//this means that the swipe is to the right direction
-						theCarousel.carousel('prev');
-					} else {
-						//this means that the swipe is to the left direction
-						theCarousel.carousel('next');
-					}
-				}
-			}
+			var currentVid;
 
-			function handleCircle(gest) {
-				if ((gest.state === 'stop') && (gest.radius < 80)) {
-					$.get('/play/' + $('.active').attr('name'), function(data) {
+			circler.stop(function(gest) {
+
+				if (gest.lastGesture.radius < 80) {
+					var idx = jssor_slider1.$CurrentIndex();
+					currentVid = data.imgs[idx].i;
+					$.get('/play/' + currentVid, function(data) {
 					});
 				}
-			}
+			});
+
+			controller.connect();
 
 			socket = io.connect();
 			socket.on('play', function(data) {
-				console.log(data);
+				window.location = "/feedback.html#" + currentVid;
 			});
-			controller.connect();
+
 		});
 
 	});
