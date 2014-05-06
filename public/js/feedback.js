@@ -39,6 +39,7 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 				if (2000 < (now - timeStamp)) {
 					var videoName = window.location.hash.slice(1);
 					$.get('/feedback/' + videoName + '/' + st, function(data) {
+						
 					});
 				}
 			}
