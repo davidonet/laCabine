@@ -38,8 +38,12 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 				var now = new Date().getTime();
 				if (2000 < (now - timeStamp)) {
 					var videoName = window.location.hash.slice(1);
+					controller.disconnect();
 					$.get('/feedback/' + videoName + '/' + st, function(data) {
-						
+						$('#thx').fadeIn();
+						$('#circle01').fadeOut(5000, function() {
+							window.location='/';
+						});
 					});
 				}
 			}
