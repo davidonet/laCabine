@@ -27,7 +27,7 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], fu
 			var jssor_slider1 = new $JssorSlider$('slider1_container', {
 				$AutoPlay : false
 			});
-
+			jssor_slider1.$GoTo(Math.floor(Math.random() * data.imgs.length));
 			var controller = new Leap.Controller({
 				enableGestures : true
 			});
@@ -63,6 +63,7 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], fu
 				if (gest.lastGesture.radius < 80) {
 					var idx = jssor_slider1.$CurrentIndex();
 					currentVid = data.imgs[idx].i;
+					controller.disconnect();
 					$.get('/play/' + currentVid, function(data) {
 					});
 				}

@@ -119,7 +119,7 @@ var redis = require("redis"), client = redis.createClient();
 
 exports.feedback = function(req, res) {
 	console.log(req.params.file, req.params.level);
-	client.sadd(req.params.file,req.params.level);
+	client.sadd(req.params.file, req.params.level);
 	res.json({
 		success : true
 	});
