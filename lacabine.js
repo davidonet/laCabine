@@ -28,7 +28,8 @@ app.get('/play/:file', routes.play);
 app.get('/cover/:file', routes.cover);
 app.get('/video/:file', routes.video);
 app.get('/feedback/:file/:level', routes.feedback);
-app.post('/postImg', routes.postImg);
+app.post('/postImg/:frame', routes.postImg);
+app.get('/generateAnim/:file', routes.generateAnim);
 
 var server = http.createServer(app).listen(app.get('port'), function() {
 	console.log("Express server listening on port " + app.get('port'));

@@ -104,17 +104,40 @@ exports.play = function(req, res) {
 
 var decode64 = require('base64').decode;
 var moment = require('moment')
+
+function zeroFill(number, width) {
+	width -= number.toString().length;
+	if (width > 0) {
+		return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+	}
+	return number + "";
+	// always return a string
+}
+
 exports.postImg = function(req, res) {
-	var data = req.body.data.replace(/^data:image\/\w+;base64,/, "");
-	var buf = new Buffer(data, 'base64');
-	var path = mediadir + 'feedback/' + moment().format('YYYYMMDD') + '/';
-	fs.mkdir(path, function(err) {
-		fs.writeFile(path + moment().format('HHmmss') + '-' + req.body.video.slice(0, -4) + '.png', buf);
-	});
-	res.json({
-		success : true
+	var data = req.body.data;
+	var header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/2.2/DTD/svg11.dtd">\n';
+	fs.writeFile('/tmp/temp.svg', header + data, function() {
+		var convertProc = childProcess.exec('rsvg-convert -o ' + '/tmp/anim/frame-' + zeroFill(req.params.frame, 5) + '.png /tmp/temp.svg', function(error, stdout, stderr) {
+		});
+		convertProc.on('exit', function(code) {
+			res.json({
+				success : true
+			});
+		});
 	});
 };
+
+exports.generateAnim = function(req, res) {
+	var convertProc = childProcess.exec('ffmpeg -r 25 -i /tmp/anim/frame-%05d.png -vcodec qtrle "/home/dolivari/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/TestRendu/' + req.params.file + '.mov"', function(error, stdout, stderr) {
+	});
+	convertProc.on('exit', function(code) {
+		res.json({
+			success : true
+		});
+	});
+};
+
 var redis = require("redis"), client = redis.createClient();
 
 exports.feedback = function(req, res) {
