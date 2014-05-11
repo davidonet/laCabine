@@ -118,7 +118,7 @@ exports.postImg = function(req, res) {
 	var data = req.body.data;
 	var header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/2.2/DTD/svg11.dtd">\n';
 	fs.writeFile('/tmp/temp.svg', header + data, function() {
-		var convertProc = childProcess.exec('rsvg-convert -o ' + '/tmp/anim/frame-' + zeroFill(req.params.frame, 5) + '.png /tmp/temp.svg', function(error, stdout, stderr) {
+		var convertProc = childProcess.exec('rsvg-convert --background-color=black -o ' + '/tmp/anim/frame-' + zeroFill(req.params.frame, 5) + '.png /tmp/temp.svg', function(error, stdout, stderr) {
 		});
 		convertProc.on('exit', function(code) {
 			res.json({
@@ -132,9 +132,30 @@ exports.generateAnim = function(req, res) {
 	var convertProc = childProcess.exec('ffmpeg -r 25 -i /tmp/anim/frame-%05d.png -vcodec qtrle "/home/dolivari/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/TestRendu/' + req.params.file + '.mov"', function(error, stdout, stderr) {
 	});
 	convertProc.on('exit', function(code) {
+		childProcess.exec('rm -f /tmp/anim/*.png');
 		res.json({
 			success : true
 		});
+	});
+};
+
+var recursive = require('recursive-readdir');
+
+var filelist;
+var fileindex = 0;
+
+recursive('/run/media/dolivari/234fd977-dd73-4733-8ba3-33a22ebf7d09/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/14avril Malvoyantes', function(err, files) {
+	filelist = files.filter(function(elt) {
+		return 0 < elt.indexOf("svg");
+	});
+});
+
+exports.inkling = function(req, res) {
+	fs.readFile(filelist[fileindex], function(err, data) {
+		res.render('inkling', {
+			data : data
+		});
+		fileindex++;
 	});
 };
 

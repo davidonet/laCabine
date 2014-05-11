@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>LaCabine</title>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+		<style>
+			body {
+				background-color: #000;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="myobj">
+			<%- data %>
+		</div>
+
+		<script>
+			$(document).ready(function() {
+				$.ajaxSetup({
+					timeout : 60000
+				});
+				var current_frame, total_frames, path, length, handle, myobj;
+
+				myobj = document.getElementById('myobj').cloneNode(true);
+
+				$('path').each(function(idx, elt) {
+					$(this).attr('id', 'i' + idx);
+				});
+				var nbpath;
+				var init = function() {
+					current_frame = 0;
+					total_frames = 25;
+					path = new Array();
+					length = new Array();
+					nbpath = $('path').length;
+					for (var i = 0; i < nbpath; i++) {
+						path[i] = document.getElementById('i' + i);
+						l = path[i].getTotalLength();
+						length[i] = l;
+						path[i].style.strokeDasharray = l + ' ' + l;
+						path[i].style.strokeDashoffset = l;
+						path[i].style.stroke = 'rgba(255,255,255,.6)';
+						path[i].style.fill = 'none';
+					}
+					handle = 0;
+
+					setTimeout(draw, 500);
+				};
+				j = 0;
+				frame = 0;
+
+				movietitle = $('title')[1].childNodes[0].nodeValue.replace(/\/| /g, "_").slice(2, -8);
+
+				var draw = function() {
+					var progress = current_frame / total_frames;
+					if (nbpath <= j) {
+						$.get('/generateAnim/' + movietitle, function() {
+							console.log('finished');
+							window.location = '/inkling';
+						});
+					} else {
+						current_frame++;
+						frame++;
+						path[j].style.strokeDashoffset = Math.floor(length[j] * (1 - progress));
+						if (.5 < progress) {
+							j++;
+							current_frame = 0;
+							total_frames = length[j];
+						}
+						var data = $('#myobj').html();
+						$.post('/postImg/' + frame, {
+							data : data
+						}, draw);
+					}
+				};
+				$('rect').first().attr('width','1000px');
+				$('rect').first().attr('height','1000px');
+				$('rect').first().attr('style','fill:#000000;');
+				$('svg').removeAttr('width');
+				$('svg').removeAttr('height');
+				init();
+
+			});
+		</script>
+	</body>
+</html>
