@@ -142,9 +142,9 @@ exports.generateAnim = function(req, res) {
 var recursive = require('recursive-readdir');
 
 var filelist;
-var fileindex = 0;
+var fileindex = 22;
 
-recursive('/run/media/dolivari/234fd977-dd73-4733-8ba3-33a22ebf7d09/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/14avril Malvoyantes', function(err, files) {
+recursive('/run/media/dolivari/234fd977-dd73-4733-8ba3-33a22ebf7d09/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/', function(err, files) {
 	filelist = files.filter(function(elt) {
 		return 0 < elt.indexOf("svg");
 	});
