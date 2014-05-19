@@ -25,11 +25,12 @@ exports.selection = function(req, res) {
 		}
 	});
 	killProc.on('exit', function(code) {
-		console.log("players killed")
+		console.log("players killed");
 	});
 	if (0 < lData.length) {
+		var sel = shuffleArray(lData);
 		res.json({
-			imgs : lData
+			imgs : sel.slice(0, 6)
 		});
 	} else {
 		fs.readdir(mediadir, function(err, files) {
@@ -38,7 +39,6 @@ exports.selection = function(req, res) {
 			};
 			files = files.filter(isImage);
 
-			var lData = [];
 			async.each(files, function(file, done) {
 				var moviename = file.slice(0, -3) + "mov";
 				mediainfo(mediadir + moviename, function(err, res) {
@@ -116,42 +116,46 @@ function zeroFill(number, width) {
 
 exports.postImg = function(req, res) {
 	var data = req.body.data;
-	var header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/2.2/DTD/svg11.dtd">\n';
-	fs.writeFile('/tmp/temp.svg', header + data, function() {
-		var convertProc = childProcess.exec('rsvg-convert --background-color=black -o ' + '/tmp/anim/frame-' + zeroFill(req.params.frame, 5) + '.png /tmp/temp.svg', function(error, stdout, stderr) {
+	fs.writeFile('/tmp/temp-' + zeroFill(req.params.frame, 5) + '.svg', data, function() {
+		var convertProc = childProcess.exec('rsvg-convert --background-color=black -o ' + '/tmp/anim/frame-' + zeroFill(req.params.frame, 5) + '.png /tmp/temp-' + zeroFill(req.params.frame, 5) + '.svg', function(error, stdout, stderr) {
 		});
 		convertProc.on('exit', function(code) {
-			res.json({
-				success : true
-			});
+			console.log('done', '/tmp/temp-' + zeroFill(req.params.frame, 5) + '.svg');
+			childProcess.exec('rm -f /tmp/temp-' + zeroFill(req.params.frame, 5) + '.svg');
 		});
-	});
-};
-
-exports.generateAnim = function(req, res) {
-	var convertProc = childProcess.exec('ffmpeg -r 25 -i /tmp/anim/frame-%05d.png -vcodec qtrle "/home/dolivari/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/TestRendu/' + req.params.file + '.mov"', function(error, stdout, stderr) {
-	});
-	convertProc.on('exit', function(code) {
-		childProcess.exec('rm -f /tmp/anim/*.png');
 		res.json({
 			success : true
 		});
 	});
 };
 
-var recursive = require('recursive-readdir');
-
-var filelist;
-var fileindex = 22;
-
-recursive('/run/media/dolivari/234fd977-dd73-4733-8ba3-33a22ebf7d09/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/', function(err, files) {
-	filelist = files.filter(function(elt) {
-		return 0 < elt.indexOf("svg");
+exports.generateAnim = function(req, res) {
+	var convertProc = childProcess.exec('ffmpeg -y -r 25 -i /tmp/anim/frame-%05d.png -vf format=yuv420p "/home/dolivari/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/TestRendu/' + req.params.file + '.mov"');
+	convertProc.on('exit', function(code) {
+		var rm = childProcess.exec('rm -f /tmp/anim/*.png');
+		rm.on('exit', function(code) {
+			res.json({
+				success : true
+			});
+		});
 	});
-});
+};
+/*
+ var recursive = require('recursive-readdir');
 
+ var filelist;
+ var fileindex = 0;
+
+ recursive('/run/media/dolivari/234fd977-dd73-4733-8ba3-33a22ebf7d09/Dropbox/Partages/partageLaCabine/DESSINS ATELIERS GRAPH AVRIL14/17avril FDA adultes', function(err, files) {
+ filelist = files.filter(function(elt) {
+ return 0 < elt.indexOf("svg");
+ });
+ console.log(filelist.length);
+ });
+ */
 exports.inkling = function(req, res) {
 	fs.readFile(filelist[fileindex], function(err, data) {
+		console.log('rendering', filelist[fileindex])
 		res.render('inkling', {
 			data : data
 		});
@@ -163,9 +167,26 @@ var redis = require("redis"), client = redis.createClient();
 
 exports.feedback = function(req, res) {
 	console.log(req.params.file, req.params.level);
-	client.sadd(req.params.file, req.params.level);
-	res.json({
-		success : true
+	client.incr(req.params.file + "-" + req.params.level, function(err) {
+		var close = [], keys = [];
+		for (var j = 0; j < 9; j++) {
+			keys[j] = {
+				idx : j,
+				key : req.params.file + "-" + j
+			};
+		}
+		console.log(keys);
+		async.each(keys, function(key, done) {
+			client.get(key.key, function(err, val) {
+				console.log(key.idx, val);
+				close[key.idx] = val;
+				done();
+			});
+		}, function(err) {
+			res.json({
+				close : close
+			});
+		});
 	});
 };
 
