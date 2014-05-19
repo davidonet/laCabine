@@ -33,18 +33,48 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 			}
 		});
 
+		function finish() {
+			$(document).unbind('keyup keydown');
+			var videoName = window.location.hash.slice(1);
+			$.get('/feedback/' + videoName + '/' + st, function(data) {
+				$('#circle01').animate({
+					width : 20 * (st + 1),
+					height : 20 * (st + 1),
+					"border-radius" : 20 * (st + 1)
+				}, 3000, function() {
+					$("#thx").fadeIn(function() {
+						setTimeout(function() {
+							$('body').fadeOut(function() {
+								document.location = '/';
+							});
+						}, 2000);
+					});
+				});
+				_.each(data.close, function(elt, idx) {
+					if (elt != null)
+						for (var nb = 0; nb < parseInt(elt); nb++) {
+							var dataCircle = {
+								top : Math.floor(Math.random() * $(document).height()) + 'px',
+								left : Math.floor(Math.random() * $(document).width()) + 'px',
+								idx : idx,
+								g : Math.floor(55 + Math.random() * 100)
+
+							};
+							var $sc = $(Mustache.render("<div class='sc{{idx}} smallcircle' style='top:{{top}};left:{{left}};background:rgba(0,{{g}},0,.7)'></div>", dataCircle));
+							$('#others').append($sc);
+							$sc.fadeIn((9 - idx) * 500);
+
+						}
+				});
+			});
+		}
+
 		handleSwipe = _.debounce(function(swipe) {
 			if ((swipe.state === 'stop') && (150 < Math.abs(swipe.startPosition[0] - swipe.position[0]))) {
 				var now = new Date().getTime();
 				if (2000 < (now - timeStamp)) {
-					var videoName = window.location.hash.slice(1);
 					controller.disconnect();
-					$.get('/feedback/' + videoName + '/' + st, function(data) {
-						$('#thx').fadeIn();
-						$('#circle01').fadeOut(5000, function() {
-							window.location='/';
-						});
-					});
+					finish();
 				}
 			}
 		}, 300);
@@ -54,12 +84,7 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 		var radiusmax = $(document).height() * .85;
 		var radiusmin = $(document).height() * .05;
 
-		function handleCircle(gest) {
-			if (gest.normal[2] <= 0) {
-				radius += gest.progress;
-			} else {
-				radius -= gest.progress;
-			}
+		function updateCircle() {
 			if (radius < radiusmin)
 				radius = radiusmin
 			if (radiusmax < radius)
@@ -69,7 +94,6 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 				height : radius,
 				"border-radius" : radius
 			});
-
 			var newst = Math.floor(8 * (radius - radiusmin) / (radiusmax - radiusmin));
 			if (newst != st) {
 				st = newst;
@@ -107,8 +131,31 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 				$("#strenght").fadeOut(function() {
 					$("#strenght").text(sp);
 					$("#strenght").fadeIn();
-				})
+				});
 			}
+		}
+
+
+		$(document).keydown(function(event) {
+			if (event.keyCode == 109)
+				radius -= 8;
+			if (event.keyCode == 107)
+				radius += 8;
+			updateCircle();
+		});
+
+		$(document).keyup(function(event) {
+			if (event.keyCode == 13)
+				finish();
+		});
+
+		function handleCircle(gest) {
+			if (gest.normal[2] <= 0) {
+				radius += gest.progress;
+			} else {
+				radius -= gest.progress;
+			}
+			updateCircle();
 		}
 
 		socket = io.connect();
