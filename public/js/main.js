@@ -27,7 +27,6 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], fu
 			var jssor_slider1 = new $JssorSlider$('slider1_container', {
 				$AutoPlay : false
 			});
-			jssor_slider1.$GoTo(Math.floor(Math.random() * data.imgs.length));
 			var controller = new Leap.Controller({
 				enableGestures : true
 			});
@@ -48,6 +47,20 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], fu
 						jssor_slider1.$Next();
 					}
 			}, cooloff);
+
+			$(document).keyup(function(event) {
+				if (event.keyCode == 39)
+					jssor_slider1.$Next();
+				if (event.keyCode == 37)
+					jssor_slider1.$Prev();
+				if (event.keyCode == 32) {
+					var idx = jssor_slider1.$CurrentIndex();
+					currentVid = data.imgs[idx].i;
+					$.get('/play/' + currentVid, function(data) {
+						$(document).unbind('keyup');
+					});
+				}
+			});
 
 			swiper.update(function(g) {
 				if (Math.abs(g.translation()[0]) > tolerance || Math.abs(g.translation()[1]) > tolerance) {
