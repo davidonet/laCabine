@@ -137,15 +137,16 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap'], function($,
 
 
 		$(document).keydown(function(event) {
-			if (event.keyCode == 109)
+			console.log(event.keyCode);
+			if (event.keyCode == 40)
 				radius -= 8;
-			if (event.keyCode == 107)
+			if (event.keyCode == 38)
 				radius += 8;
 			updateCircle();
 		});
 
 		$(document).keyup(function(event) {
-			if (event.keyCode == 13)
+			if (event.keyCode == 32)
 				finish();
 		});
 

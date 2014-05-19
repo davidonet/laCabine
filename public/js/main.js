@@ -57,7 +57,7 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], fu
 					var idx = jssor_slider1.$CurrentIndex();
 					currentVid = data.imgs[idx].i;
 					$.get('/play/' + currentVid, function(data) {
-						$(document).unbind('keyup');
+						window.location = "/feedback.html#" + currentVid;
 					});
 				}
 			});
@@ -78,17 +78,26 @@ require(['jquery', 'underscore', 'mustache', 'socket', 'bootstrap', 'jssor'], fu
 					currentVid = data.imgs[idx].i;
 					controller.disconnect();
 					$.get('/play/' + currentVid, function(data) {
+
+						window.location = "/feedback.html#" + currentVid;
 					});
 				}
 			});
 
 			controller.connect();
+			/*
+			 socket = io.connect();
+			 socket.on('play', function(data) {
+			 window.location = "/feedback.html#" + currentVid;
+			 });
+			 */
 
-			socket = io.connect();
-			socket.on('play', function(data) {
-				window.location = "/feedback.html#" + currentVid;
-			});
-
+			$('#slider1_container').fadeIn(2000);
+			setTimeout(function() {
+				$('p').animate({
+					bottom : "0px"
+				});
+			}, 1000)
 		});
 
 	});

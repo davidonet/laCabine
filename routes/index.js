@@ -82,10 +82,6 @@ exports.play = function(req, res) {
 			name : req.params.file
 		}
 	}];
-	request.post("http://log.bype.org/1.0/event/put", {
-		proxy : process.env.HTTP_PROXY,
-		body : JSON.stringify(aLog)
-	});
 	var playProc = childProcess.exec('mplayer -really-quiet ' + mediadir + req.params.file + ' -fs', function(error, stdout, stderr) {
 		if (error) {
 			console.log(error.stack);
