@@ -75,13 +75,6 @@ exports.video = function(req, res) {
 
 exports.play = function(req, res) {
 	console.log("playing", req.params.file);
-	var aLog = [{
-		type : 'laCabine',
-		time : new Date(),
-		data : {
-			name : req.params.file
-		}
-	}];
 	var playProc = childProcess.exec('mplayer -really-quiet ' + mediadir + req.params.file + ' -fs', function(error, stdout, stderr) {
 		if (error) {
 			console.log(error.stack);
